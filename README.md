@@ -23,6 +23,8 @@ A responsive invoice generation web application built using React JS. It enables
 
 * Description field must not be empty – alerts user.
 
+* While Preview Also All field must be filled without that can't download PDF -alerts user
+
 # 🧮 Real-time Calculation
 * Auto-calculate:
 

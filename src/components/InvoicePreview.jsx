@@ -16,6 +16,19 @@ export default function InvoicePreview({ invoice }) {
   };
 
   const handleDownloadPDF = async () => {
+    if (
+      !invoice.invoiceNumber ||
+      !invoice.billTo ||
+      !invoice.items ||
+      invoice.items.length === 0 ||
+      !invoice.subtotal ||
+      !invoice.total
+    ) {
+      alert(
+        "Please fill in all required fields before downloading the invoice."
+      );
+      return; // Stop the process if fields are incomplete
+    }
     const input = invoiceRef.current;
     if (!input) return console.error("Invoice DOM not found");
 
@@ -25,7 +38,11 @@ export default function InvoicePreview({ invoice }) {
       const pdf = new jsPDF("p", "mm", "a4");
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const scale = pdfWidth / imgWidth;
+      const scaledHeight = imgHeight * scale;
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight, scaledHeight);
       pdf.save(`${invoice.invoiceNumber || "invoice"}.pdf`);
     } catch (err) {
       console.error("PDF generation failed:", err);
