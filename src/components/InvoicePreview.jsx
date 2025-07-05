@@ -39,7 +39,7 @@ export default function InvoicePreview({ invoice }) {
       const pdf = new jsPDF("p", "mm", "a4");
 
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const pdfHeight = pdf.internal.pageSize.getHeight();
 
       const imgWidth = canvas.width;
       const imgHeight = canvas.height;
@@ -47,7 +47,7 @@ export default function InvoicePreview({ invoice }) {
       const scale = pdfWidth / imgWidth;
       const scaledHeight = imgHeight * scale;
 
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight, scaledHeight);
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth,  scaledHeight);
 
       if (scaledHeight > pdfHeight) {
       let offset = 0;
