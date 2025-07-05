@@ -35,14 +35,34 @@ export default function InvoicePreview({ invoice }) {
     try {
       const canvas = await html2canvas(input, { scale: 2, useCORS: true });
       const imgData = canvas.toDataURL("image/png");
+
       const pdf = new jsPDF("p", "mm", "a4");
+
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
       const imgWidth = canvas.width;
       const imgHeight = canvas.height;
+
       const scale = pdfWidth / imgWidth;
       const scaledHeight = imgHeight * scale;
+
       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight, scaledHeight);
+
+      if (scaledHeight > pdfHeight) {
+      let offset = 0;
+      while (offset < scaledHeight) {
+        const pageHeight = pdfHeight;
+        const height = Math.min(scaledHeight - offset, pageHeight);
+        pdf.addImage(imgData, "PNG", 0, offset, pdfWidth, height);
+        offset += height;
+
+        // Add new page if there's more content
+        if (offset < scaledHeight) {
+          pdf.addPage();
+        }
+      }
+    }
       pdf.save(`${invoice.invoiceNumber || "invoice"}.pdf`);
     } catch (err) {
       console.error("PDF generation failed:", err);
