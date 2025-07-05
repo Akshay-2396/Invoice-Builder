@@ -44,8 +44,8 @@ export default function InvoicePreview({ invoice }) {
       const imgWidth = canvas.width;
       const imgHeight = canvas.height;
 
-      const scale = pdfWidth / imgWidth;
-      const scaledHeight = imgHeight * scale;
+      const scaleFactor = pdfWidth / imgWidth;
+      const scaledHeight = imgHeight * scaleFactor;
 
       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth,  scaledHeight);
 
